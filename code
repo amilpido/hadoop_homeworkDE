@@ -1,3 +1,6 @@
+https://colab.research.google.com/drive/1Gyo2YacENGBLzsy8152roHSN3oBsWDUo?usp=sharing
+
+
 !wget -O wordcount.txt https://raw.githubusercontent.com/ayyoubmaul/hadoop-docker/refs/heads/main/data/uud45.txt
 
 #!/usr/bin/env python3
