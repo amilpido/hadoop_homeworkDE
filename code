@@ -1,0 +1,67 @@
+!wget -O wordcount.txt https://raw.githubusercontent.com/ayyoubmaul/hadoop-docker/refs/heads/main/data/uud45.txt
+
+#!/usr/bin/env python3
+import sys
+
+for line in sys.stdin:
+    words = line.strip().split()
+    for word in words:
+        print(f"{word}\t1")
+
+#!/usr/bin/env python3
+import sys
+
+word_count = {}
+
+for line in sys.stdin:
+    word, count = line.strip().split("\t")
+    word_count[word] = word_count.get(word, 0) + int(count)
+
+for word, count in word_count.items():
+    print(f"{word}\t{count}")
+
+!apt-get update
+!apt-get install openjdk-8-jdk-headless -qq > /dev/null
+!wget -q https://downloads.apache.org/hadoop/common/hadoop-3.2.3/hadoop-3.2.3.tar.gz
+!tar -xzf hadoop-3.2.3.tar.gz
+!mv hadoop-3.2.3 hadoop
+
+import os
+os.environ["HADOOP_HOME"] = "/content/hadoop"
+os.environ["PATH"] += os.pathsep + "/content/hadoop/bin"
+
+!hadoop fs -mkdir -p input
+!hadoop fs -put wordcount.txt input/
+
+!hadoop jar hadoop/share/hadoop/tools/lib/hadoop-streaming-3.2.3.jar \
+    -input input/wordcount.txt \
+    -output output \
+    -mapper mapper.py \
+    -reducer reducer.py
+
+!apt-get update
+!apt-get install openjdk-8-jdk-headless -qq > /dev/null
+
+!wget https://downloads.apache.org/hadoop/common/hadoop-3.2.3/hadoop-3.2.3.tar.gz
+
+!tar -xvzf hadoop-3.2.3.tar.gz
+
+!mv hadoop-3.2.3 hadoop
+
+import os
+os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
+os.environ["HADOOP_HOME"] = "/content/hadoop"
+os.environ["PATH"] += os.pathsep + "/content/hadoop/bin" + os.pathsep + "/content/hadoop/sbin"
+
+!hadoop version
+
+!hadoop fs -ls input/
+
+!git init
+!git config --global user.email "amilpido23@gmail.com"
+!git config --global user.name "amilpido"
+!git add .
+!git commit -m "Hadoop WordCount project"
+!git branch -M main
+!git remote add origin "https://github.com/amilpido/hadoop_homeworkDE"
+!git push -u origin main
